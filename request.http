@@ -1,0 +1,71 @@
+### Create Book
+
+POST http://localhost:8080/odata/v4/BooksService/Books
+Content-Type: application/json
+
+{
+    "ID": 1,
+    "name": "GOT",
+    "author": "fk",
+    "stock" : 1
+}
+
+### Create Book
+
+POST http://localhost:8080/odata/v4/BooksService/Books
+Content-Type: application/json
+
+{
+    "ID": 2,
+    "name": "HP",
+    "author": "jk",
+    "stock" : 2
+}
+
+### Restocking
+
+POST http://localhost:8080/odata/v4/BooksService/BooksReStock
+Content-Type: application/json
+
+{
+    "bookId": 1,
+    "quantity": 2
+}
+
+### Create Subscriber
+
+POST http://localhost:8080/odata/v4/SubscriberService/Subscriber
+Content-Type: application/json
+
+{
+    "ID": 1,
+    "name": "Ashu"
+}
+
+### Create Subscriber
+
+POST http://localhost:8080/odata/v4/SubscriberService/Subscriber
+Content-Type: application/json
+
+{
+    "ID": 2,
+    "name": "Karmakar"
+}
+
+### Borrow book
+
+POST http://localhost:8080/odata/v4/BorrowService/Borrow
+Content-Type: application/json
+
+{
+    "ID": 2,
+    "book":{
+        "ID": 1
+    } ,
+    "quantity" : 2,
+    "subscriber":{
+        "ID": 1
+    }
+}
+
+
