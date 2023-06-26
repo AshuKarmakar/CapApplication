@@ -23,11 +23,16 @@ import cds.gen.booksservice.Books;
 import cds.gen.booksservice.BooksService_;
 import cds.gen.booksservice.Books_;
 import customer.bookstore.EventContext.BooksReStockEventContext;
+import customer.bookstore.Services.BooksService;
 
 
 @Component
 @ServiceName(BooksService_.CDS_NAME)
-public class BooksService implements EventHandler {
+public class BooksController implements EventHandler {
+
+    @Autowired
+    BooksService booksservice;
+
     @Autowired
     PersistenceService db;
 
@@ -36,36 +41,24 @@ public class BooksService implements EventHandler {
         System.out.println("Hello");
         for(Books book : books ){
             String bookName = book.getName();
-            CqnSelect findBook = Select.from(Books_.class).where(b -> b.name().eq(bookName));
-            Books exists = db.run(findBook).first(Books.class).orElse(null);
+            Books exists = booksservice.getBooksByName(bookName);
             if(exists != null){
                 throw new ServiceException(ErrorStatuses.CONFLICT, "Book already present just restock");
             }
         }
     }
-    @Before(event = CqnService.EVENT_UPDATE)
-    public void deletion(List<Books> books){
-        System.out.println("Inside Updation");
-        System.out.println(books);
-    }
-    
     
     @On(event = "BooksReStock")
     public void reStock(BooksReStockEventContext context){
         int book_id = (int) context.get("bookId");
         int qty = (int) context.get("quantity");
         System.out.println("Restocking");
-        CqnSelect findBook = Select.from(Books_.class).where(b -> b.ID().eq(book_id));
-        Books exists = db.run(findBook).first(Books.class).orElse(null);
-        if(exists != null){
-            System.out.println(exists);
-            exists.setStock(exists.getStock() + qty);
-            CqnUpdate update = Update.entity(Books_.class).data(exists).where(b -> b.ID().eq(book_id));
-            db.run(update);
+        Books book = booksservice.getBookById(book_id);
+        if(book != null){
+            booksservice.bookUpdate(book, qty, book_id);
         }
         context.setResult("Restocked Successfully");
     }
-
 
 }
 

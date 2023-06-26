@@ -58,11 +58,11 @@ POST http://localhost:8080/odata/v4/BorrowService/Borrow
 Content-Type: application/json
 
 {
-    "ID": 2,
+    "ID": 4,
     "book":{
         "ID": 1
     } ,
-    "quantity" : 2,
+    "quantity" : 1,
     "subscriber":{
         "ID": 1
     }
