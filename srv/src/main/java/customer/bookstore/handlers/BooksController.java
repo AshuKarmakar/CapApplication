@@ -56,8 +56,11 @@ public class BooksController implements EventHandler {
         Books book = booksservice.getBookById(book_id);
         if(book != null){
             booksservice.bookUpdate(book, qty, book_id);
+            context.setResult("Restocked Successfully");
         }
-        context.setResult("Restocked Successfully");
+        else {
+            context.setResult("Restock Unsuccessfull, Book not found");
+        }
     }
 
 }

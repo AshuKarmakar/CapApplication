@@ -39,15 +39,15 @@ public class BorrowController implements EventHandler {
     @Before(event = CqnService.EVENT_CREATE, entity = Borrow_.CDS_NAME)
     public void check(List<Borrow> borrows){
         for(Borrow borrow : borrows){
-            int book_id = borrow.getBook().getId();
-            int subs_id = borrow.getSubscriber().getId();
-            Books foundBook = borrowService.findBook(book_id);
-            Subscriber foundSub = borrowService.findSubscriber(subs_id);
+//            int book_id = borrow.getBook().getId();
+//            int subs_id = borrow.getSubscriber().getId();
+            Books foundBook = borrowService.findBook(borrow);
+            Subscriber foundSub = borrowService.findSubscriber(borrow);
 
             // db.run(findSubs).first(Subscriber.class).orElse(null);
             if((foundBook != null) && (foundSub != null)){
                 if((foundBook.getStock() == borrow.getQuantity() || foundBook.getStock() > borrow.getQuantity())){
-                    borrowService.BooksUpdate(foundBook, borrow, book_id);
+                    borrowService.BooksUpdate(foundBook, borrow);
                 }
                 else{
                     throw new ServiceException(ErrorStatuses.CONFLICT, "The Book is out of stock"); 

@@ -21,19 +21,22 @@ public class BorrowService {
     @Autowired
     private PersistenceService db;
 
-    public Books findBook(int book_id){
+    public Books findBook(Borrow borrow){
+        int book_id = borrow.getBook().getId();
         CqnSelect findBook= Select.from(Books_.class).where(b -> b.ID().eq(book_id));
         Books foundBook = db.run(findBook).first(Books.class).orElse(null);
         return foundBook;
     }
 
-    public Subscriber findSubscriber(int subs_id){
+    public Subscriber findSubscriber(Borrow borrow){
+        int subs_id = borrow.getSubscriber().getId();
         CqnSelect findSubs= Select.from(Subscriber_.class).where(b -> b.ID().eq(subs_id));
         Subscriber foundSub = db.run(findSubs).first(Subscriber.class).orElse(null);
         return foundSub;
     }
 
-    public void BooksUpdate(Books foundBook, Borrow borrow, int book_id){
+    public void BooksUpdate(Books foundBook, Borrow borrow){
+        int book_id = borrow.getBook().getId();
         foundBook.setStock(foundBook.getStock() - borrow.getQuantity());
         CqnUpdate update = Update.entity(Books_.class).data(foundBook).where(b -> b.ID().eq(book_id));
         db.run(update);
